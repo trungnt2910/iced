@@ -38,7 +38,12 @@ namespace Generator.IO {
 				singleLineCommentPrefix = "# ";
 				multiLineComment = ("", "# ", "");
 				break;
-
+			case TargetLanguage.CPlusPlus:
+				numberPrefix = "0x";
+				numberByteFormat = "#02X";
+				singleLineCommentPrefix = "// ";
+				multiLineComment = ("/* ", "", " */");
+				break;
 			default:
 				throw new InvalidOperationException();
 			}
@@ -146,6 +151,10 @@ namespace Generator.IO {
 			WriteCLangHeader();
 			if (targetLanguage == TargetLanguage.CSharp) {
 				WriteLine("#nullable enable");
+				WriteLine();
+			}
+			if (targetLanguage == TargetLanguage.CPlusPlus) {
+				WriteLine("#pragma once");
 				WriteLine();
 			}
 		}

@@ -164,4 +164,38 @@ namespace Generator {
 		public override string Namespace(string name) => ToSnakeCase(name);
 		public override string Argument(string name) => ToSnakeCase(name);
 	}
+
+	sealed class CPlusPlusIdentifierConverter : IdentifierConverter {
+		public static IdentifierConverter Create() => new CPlusPlusIdentifierConverter();
+		CPlusPlusIdentifierConverter() { }
+
+		protected override string EnumSeparator => "::";
+		public override string Type(string name) => Escape(name);
+		public override string Field(string name) => Escape(name);
+		public override string EnumField(string name) => Escape(name);
+		public override string PropertyDoc(string name) => Escape(name);
+		public override string MethodDoc(string name) => Escape(name);
+		public override string Method(string name) => Escape(ToSnakeCase(name));
+		public override string Constant(string name) => Escape(ToScreamingSnakeCase(name));
+		public override string Static(string name) => Escape(ToSnakeCase(name));
+		public override string Namespace(string name) => Escape(name);
+		public override string Argument(string name) => Escape(ToLowerCamelCase(name));
+
+		static readonly HashSet<string> keywords = new(StringComparer.Ordinal) {
+			"alignas", "alignof", "asm", "auto", "bool", "break", "case", "catch",
+			"char", "char16_t", "char32_t", "class", "const", "constexpr", "const_cast",
+			"continue", "decltype", "default", "delete", "do", "double", "dynamic_cast", 
+			"else", "enum", "explicit", "export", "extern", "false", "float", "for", 
+			"friend", "goto", "if", "inline", "int", "long", "mutable", "namespace", 
+			"new", "noexcept", "nullptr", "operator", "private", "protected", "public", 
+			"register", "reinterpret_cast", "return", "short", "signed", "sizeof", 
+			"static", "static_assert", "static_cast", "struct", "switch", "template",
+			"this", "thread_local", "throw", "true", "try", "typedef", "typeid", 
+			"typename", "union", "unsigned", "using", "virtual", "void", "volatile", 
+			"wchar_t", "while", "and", "and_eq", "bitand", "bitor", "compl", "not", 
+			"not_eq", "or", "or_eq", "xor", "xor_eq",
+		};
+
+		static string Escape(string name) => keywords.Contains(name) ? name+"_" : name;
+	}
 }

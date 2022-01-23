@@ -59,6 +59,7 @@ namespace Generator {
 		public string RustDir => langDirs[(int)TargetLanguage.Rust];
 		public string RustJSDir => langDirs[(int)TargetLanguage.RustJS];
 		public string PythonDir => langDirs[(int)TargetLanguage.Python];
+		public string CPlusPlusDir => langDirs[(int)TargetLanguage.CPlusPlus];
 		public string GeneratorDir { get; }
 		readonly string[] langDirs;
 
@@ -73,6 +74,7 @@ namespace Generator {
 					TargetLanguage.Rust => GetAndVerifyPath(baseDir, "rust", "iced-x86", "src"),
 					TargetLanguage.RustJS => GetAndVerifyPath(baseDir, "rust", "iced-x86-js", "src"),
 					TargetLanguage.Python => GetAndVerifyPath(baseDir, "rust", "iced-x86-py"),
+					TargetLanguage.CPlusPlus => GetAndVerifyPath(baseDir, "cpp", "iced-x86"),
 					_ => throw new InvalidOperationException(),
 				};
 				langDirs[i] = path;
