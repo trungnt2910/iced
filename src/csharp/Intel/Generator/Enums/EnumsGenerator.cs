@@ -110,6 +110,7 @@ namespace Generator.Enums {
 				genTypes[TypeIds.RepPrefixKind],
 				genTypes[TypeIds.RelocKind],
 				genTypes[TypeIds.BlockEncoderOptions],
+				genTypes[TypeIds.EncFlags1],
 				genTypes[TypeIds.EncFlags2],
 				genTypes[TypeIds.EncFlags3],
 				genTypes[TypeIds.OpCodeInfoFlags1],
