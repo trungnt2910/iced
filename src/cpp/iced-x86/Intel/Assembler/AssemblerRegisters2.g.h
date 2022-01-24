@@ -9,7 +9,8 @@ Copyright (C) 2018-present iced project and contributors
 
 #if defined(ENCODER) && defined(BLOCK_ENCODER) && defined(CODE_ASSEMBLER)
 #include "AssemblerMemoryOperandFactory.h"
-#include "../Registers.h"
+#include "../Register.g.h"
+
 namespace Iced::Intel {
 	/// <summary>
 	/// Registers used for <see cref="Assembler"/>. 

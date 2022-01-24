@@ -64,7 +64,7 @@ namespace Generator.Assembler.CPlusPlus {
 				writer.WriteLineNoIndent($"#if {CPlusPlusConstants.CodeAssemblerDefine}");
 
 				writer.WriteLine("#include \"../Register.g.h\"");
-				writer.WriteLine("#include \"../AssemblerRegister.g.h\"");
+				writer.WriteLine("#include \"AssemblerRegister.g.h\"");
 				writer.WriteLine();
 
 				writer.WriteLine($"namespace {CPlusPlusConstants.IcedNamespace} {{");
@@ -91,6 +91,7 @@ namespace Generator.Assembler.CPlusPlus {
 				writer.WriteFileHeader();
 				writer.WriteLineNoIndent($"#if {CPlusPlusConstants.CodeAssemblerDefine}");
 				writer.WriteLine("#include <cstdint>");
+				writer.WriteLine("#include <string>");
 				writer.WriteLine("#include \"../Register.g.h\"");
 				writer.WriteLine("#include \"AssemblerMemoryOperand.h\"");
 				writer.WriteLine();
@@ -216,7 +217,7 @@ namespace Generator.Assembler.CPlusPlus {
 								writer.WriteLine("/// </summary>");
 								writer.WriteLine($"/// <param name=\"reg\">{className}</param>");
 								writer.WriteLine("/// <returns></returns>");
-								writer.WriteLine($"constexpr operator {registerTypeName}({className} reg) const;");
+								writer.WriteLine($"constexpr operator {registerTypeName}() const;");
 								if (reg.IsGPR16_32_64) {
 									writer.WriteLine();
 									writer.WriteLine("/// <summary>");
@@ -262,7 +263,10 @@ namespace Generator.Assembler.CPlusPlus {
 								}
 								writer.WriteLine();
 								writer.WriteLine("/// <inheritdoc />");
-								writer.WriteLine("constexpr int GetHashCode() const;");
+								writer.WriteLine("constexpr std::size_t GetHashCode() const;");
+								writer.WriteLine();
+								writer.WriteLine("/// <inheritdoc />");
+								writer.WriteLine("constexpr std::string ToString() const;");
 								writer.WriteLine();
 								writer.WriteLine("/// <summary>");
 								writer.WriteLine($"/// Equality operator for <see cref=\"{className}\"/>");
@@ -286,230 +290,8 @@ namespace Generator.Assembler.CPlusPlus {
 								writer.WriteLine($"constexpr bool operator ==(const {registerTypeName}& right) const;");
 							}
 						}
-						writer.WriteLine("}");
+						writer.WriteLine("};");
 					}
-
-					//for (int i = 0; i < infos.Length; i++) {
-					//	var reg = infos[i];
-					//	var className = $"AssemblerRegister{GetRegisterSuffix(reg.Kind)}";
-					//	var isName = reg.Kind switch {
-					//		RegisterKind.None => throw new InvalidOperationException(),
-					//		RegisterKind.GPR8 => "GPR8",
-					//		RegisterKind.GPR16 => "GPR16",
-					//		RegisterKind.GPR32 => "GPR32",
-					//		RegisterKind.GPR64 => "GPR64",
-					//		RegisterKind.IP => "IP",
-					//		RegisterKind.Segment => "SegmentRegister",
-					//		RegisterKind.ST => "ST",
-					//		RegisterKind.CR => "CR",
-					//		RegisterKind.DR => "DR",
-					//		RegisterKind.TR => "TR",
-					//		RegisterKind.BND => "BND",
-					//		RegisterKind.K => "K",
-					//		RegisterKind.MM => "MM",
-					//		RegisterKind.XMM => "XMM",
-					//		RegisterKind.YMM => "YMM",
-					//		RegisterKind.ZMM => "ZMM",
-					//		RegisterKind.TMM => "TMM",
-					//		_ => throw new InvalidOperationException(),
-					//	};
-
-					//	if (i != 0)
-					//		writer.WriteLine();
-					//	writer.WriteLine("/// <summary>");
-					//	writer.WriteLine("/// An assembler register used with <see cref=\"Assembler\"/>.");
-					//	writer.WriteLine("/// </summary>");
-					//	writer.WriteLine($"struct {className} {{");
-					//	using (writer.Indent()) {
-					//		writer.WriteLine("/// <summary>");
-					//		writer.WriteLine("/// Creates a new instance.");
-					//		writer.WriteLine("/// </summary>");
-					//		writer.WriteLine("/// <param name=\"value\">A Register</param>");
-					//		writer.WriteLine($"public {className}({registerTypeName} value) {{");
-					//		using (writer.Indent()) {
-					//			writer.WriteLine($"if (!value.Is{isName}())");
-					//			using (writer.Indent())
-					//				writer.WriteLine($"throw new ArgumentOutOfRangeException($\"Invalid register {{value}}. Must be a {isName} register\", nameof(value));");
-					//			writer.WriteLine("Value = value;");
-					//			if (reg.NeedsState)
-					//				writer.WriteLine("Flags = AssemblerOperandFlags.None;");
-					//		}
-					//		writer.WriteLine("}");
-					//		writer.WriteLine();
-					//		writer.WriteLine("/// <summary>");
-					//		writer.WriteLine("/// The register value.");
-					//		writer.WriteLine("/// </summary>");
-					//		writer.WriteLine($"public readonly {registerTypeName} Value;");
-					//		if (reg.NeedsState) {
-					//			writer.WriteLine();
-					//			writer.WriteLine("/// <summary>");
-					//			writer.WriteLine("/// Creates a new instance.");
-					//			writer.WriteLine("/// </summary>");
-					//			writer.WriteLine("/// <param name=\"value\">A register</param>");
-					//			writer.WriteLine("/// <param name=\"flags\">The mask</param>");
-					//			writer.WriteLine($"public {className}({registerTypeName} value, AssemblerOperandFlags flags) {{");
-					//			using (writer.Indent()) {
-					//				writer.WriteLine("Value = value;");
-					//				writer.WriteLine("Flags = flags;");
-					//			}
-					//			writer.WriteLine("}");
-					//			writer.WriteLine();
-					//			writer.WriteLine("internal readonly AssemblerOperandFlags Flags;");
-					//			for (int j = 1; j <= 7; j++) {
-					//				writer.WriteLine();
-					//				writer.WriteLine("/// <summary>");
-					//				writer.WriteLine($"/// Apply mask Register K{j}.");
-					//				writer.WriteLine("/// </summary>");
-					//				writer.WriteLine($"public {className} k{j} => new {className}(Value, (Flags & ~AssemblerOperandFlags.RegisterMask) | AssemblerOperandFlags.K{j});");
-					//			}
-					//			writer.WriteLine();
-					//			writer.WriteLine("/// <summary>");
-					//			writer.WriteLine("/// Apply mask Zeroing.");
-					//			writer.WriteLine("/// </summary>");
-					//			writer.WriteLine($"public {className} z => new {className}(Value, Flags | AssemblerOperandFlags.Zeroing);");
-					//			if (reg.HasSaeOrEr) {
-					//				writer.WriteLine();
-					//				writer.WriteLine("/// <summary>");
-					//				writer.WriteLine("/// Suppress all exceptions");
-					//				writer.WriteLine("/// </summary>");
-					//				writer.WriteLine($"public {className} sae => new {className}(Value, Flags | AssemblerOperandFlags.SuppressAllExceptions);");
-					//				writer.WriteLine();
-					//				writer.WriteLine("/// <summary>");
-					//				writer.WriteLine("/// Round to nearest (even)");
-					//				writer.WriteLine("/// </summary>");
-					//				writer.WriteLine($"public {className} rn_sae => new {className}(Value, (Flags & ~AssemblerOperandFlags.RoundControlMask) | AssemblerOperandFlags.RoundToNearest);");
-					//				writer.WriteLine();
-					//				writer.WriteLine("/// <summary>");
-					//				writer.WriteLine("/// Round down (toward -inf)");
-					//				writer.WriteLine("/// </summary>");
-					//				writer.WriteLine($"public {className} rd_sae => new {className}(Value, (Flags & ~AssemblerOperandFlags.RoundControlMask) | AssemblerOperandFlags.RoundDown);");
-					//				writer.WriteLine();
-					//				writer.WriteLine("/// <summary>");
-					//				writer.WriteLine("/// Round up (toward +inf)");
-					//				writer.WriteLine("/// </summary>");
-					//				writer.WriteLine($"public {className} ru_sae => new {className}(Value, (Flags & ~AssemblerOperandFlags.RoundControlMask) | AssemblerOperandFlags.RoundUp);");
-					//				writer.WriteLine();
-					//				writer.WriteLine("/// <summary>");
-					//				writer.WriteLine("/// Round toward zero (truncate)");
-					//				writer.WriteLine("/// </summary>");
-					//				writer.WriteLine($"public {className} rz_sae => new {className}(Value, (Flags & ~AssemblerOperandFlags.RoundControlMask) | AssemblerOperandFlags.RoundTowardZero);");
-					//			}
-					//		}
-					//		writer.WriteLine();
-					//		writer.WriteLine("/// <summary>");
-					//		writer.WriteLine($"/// Converts a <see cref=\"{className}\"/> to a <see cref=\"{registerTypeName}\"/>.");
-					//		writer.WriteLine("/// </summary>");
-					//		writer.WriteLine($"/// <param name=\"reg\">{className}</param>");
-					//		writer.WriteLine("/// <returns></returns>");
-					//		writer.WriteLine($"public static implicit operator {registerTypeName}({className} reg) => reg.Value;");
-					//		if (reg.IsGPR16_32_64) {
-					//			writer.WriteLine();
-					//			writer.WriteLine("/// <summary>");
-					//			writer.WriteLine("/// Adds a register (base) to another register (index) and return a memory operand.");
-					//			writer.WriteLine("/// </summary>");
-					//			writer.WriteLine("/// <param name=\"left\">The base register.</param>");
-					//			writer.WriteLine("/// <param name=\"right\">The index register</param>");
-					//			writer.WriteLine("/// <returns></returns>");
-					//			writer.WriteLine($"public static AssemblerMemoryOperand operator +({className} left, {className} right) =>");
-					//			using (writer.Indent())
-					//				writer.WriteLine($"new AssemblerMemoryOperand({memOpNoneName}, {regNoneName}, left, right, 1, 0, AssemblerOperandFlags.None);");
-					//			if (reg.IsGPR32_64) {
-					//				foreach (var mm in new[] { "XMM", "YMM", "ZMM" }) {
-					//					writer.WriteLine();
-					//					writer.WriteLine("/// <summary>");
-					//					writer.WriteLine("/// Adds a register (base) to another register (index) and return a memory operand.");
-					//					writer.WriteLine("/// </summary>");
-					//					writer.WriteLine("/// <param name=\"left\">The base register.</param>");
-					//					writer.WriteLine("/// <param name=\"right\">The index register</param>");
-					//					writer.WriteLine("/// <returns></returns>");
-					//					writer.WriteLine($"public static AssemblerMemoryOperand operator +({className} left, AssemblerRegister{mm} right) =>");
-					//					using (writer.Indent())
-					//						writer.WriteLine($"new AssemblerMemoryOperand({memOpNoneName}, {regNoneName}, left, right, 1, 0, AssemblerOperandFlags.None);");
-					//				}
-					//			}
-					//		}
-					//		if (reg.IsGPR16_32_64 || reg.IsVector) {
-					//			writer.WriteLine();
-					//			writer.WriteLine("/// <summary>");
-					//			writer.WriteLine("/// Adds a register (base) with a displacement and return a memory operand.");
-					//			writer.WriteLine("/// </summary>");
-					//			writer.WriteLine("/// <param name=\"left\">The base register</param>");
-					//			writer.WriteLine("/// <param name=\"displacement\">The displacement</param>");
-					//			writer.WriteLine("/// <returns></returns>");
-					//			writer.WriteLine($"public static AssemblerMemoryOperand operator +({className} left, long displacement) =>");
-					//			using (writer.Indent())
-					//				writer.WriteLine($"new AssemblerMemoryOperand({memOpNoneName}, {regNoneName}, left, {regNoneName}, 1, displacement, AssemblerOperandFlags.None);");
-					//			writer.WriteLine();
-					//			writer.WriteLine("/// <summary>");
-					//			writer.WriteLine("/// Subtracts a register (base) with a displacement and return a memory operand.");
-					//			writer.WriteLine("/// </summary>");
-					//			writer.WriteLine("/// <param name=\"left\">The base register</param>");
-					//			writer.WriteLine("/// <param name=\"displacement\">The displacement</param>");
-					//			writer.WriteLine("/// <returns></returns>");
-					//			writer.WriteLine($"public static AssemblerMemoryOperand operator -({className} left, long displacement) =>");
-					//			using (writer.Indent())
-					//				writer.WriteLine($"new AssemblerMemoryOperand({memOpNoneName}, {regNoneName}, left, {regNoneName}, 1, -displacement, AssemblerOperandFlags.None);");
-					//			writer.WriteLine();
-					//			writer.WriteLine("/// <summary>");
-					//			writer.WriteLine("/// Multiplies an index register by a scale and return a memory operand.");
-					//			writer.WriteLine("/// </summary>");
-					//			writer.WriteLine("/// <param name=\"left\">The base register</param>");
-					//			writer.WriteLine("/// <param name=\"scale\">The scale</param>");
-					//			writer.WriteLine("/// <returns></returns>");
-					//			writer.WriteLine($"public static AssemblerMemoryOperand operator *({className} left, int scale) =>");
-					//			using (writer.Indent())
-					//				writer.WriteLine($"new AssemblerMemoryOperand({memOpNoneName}, {regNoneName}, {regNoneName}, left, scale, 0, AssemblerOperandFlags.None);");
-					//		}
-					//		if (reg.NeedsState) {
-					//			writer.WriteLine();
-					//			writer.WriteLine("/// <inheritdoc />");
-					//			writer.WriteLine($"public bool Equals({className} other) => Value == other.Value && Flags == other.Flags;");
-					//			writer.WriteLine();
-					//			writer.WriteLine("/// <inheritdoc />");
-					//			writer.WriteLine("public override int GetHashCode() => ((int)Value * 397) ^ (int)Flags;");
-					//		}
-					//		else {
-					//			writer.WriteLine();
-					//			writer.WriteLine("/// <inheritdoc />");
-					//			writer.WriteLine($"public bool Equals({className} other) => Value == other.Value;");
-					//			writer.WriteLine();
-					//			writer.WriteLine("/// <inheritdoc />");
-					//			writer.WriteLine("public override int GetHashCode() => (int)Value;");
-					//		}
-					//		writer.WriteLine();
-					//		writer.WriteLine("/// <inheritdoc />");
-					//		writer.WriteLine($"public override bool Equals(object? obj) => obj is {className} other && Equals(other);");
-					//		writer.WriteLine();
-					//		writer.WriteLine("/// <summary>");
-					//		writer.WriteLine($"/// Equality operator for <see cref=\"{className}\"/>");
-					//		writer.WriteLine("/// </summary>");
-					//		writer.WriteLine("/// <param name=\"left\">Register</param>");
-					//		writer.WriteLine("/// <param name=\"right\">Register</param>");
-					//		writer.WriteLine("/// <returns></returns>");
-					//		writer.WriteLine($"public static bool operator ==({className} left, {className} right) => left.Equals(right);");
-					//		writer.WriteLine();
-					//		writer.WriteLine("/// <summary>");
-					//		writer.WriteLine($"/// Inequality operator for <see cref=\"{className}\"/>");
-					//		writer.WriteLine("/// </summary>");
-					//		writer.WriteLine("/// <param name=\"left\">Register</param>");
-					//		writer.WriteLine("/// <param name=\"right\">Register</param>");
-					//		writer.WriteLine("/// <returns></returns>");
-					//		writer.WriteLine($"public static bool operator !=({className} left, {className} right) => !left.Equals(right);");
-					//	}
-					//	writer.WriteLine("}");
-					//	if (reg.IsGPR16_32_64) {
-					//		writer.WriteLine();
-					//		writer.WriteLine("public readonly partial struct AssemblerMemoryOperandFactory {");
-					//		using (writer.Indent()) {
-					//			writer.WriteLine("/// <summary>");
-					//			writer.WriteLine("/// Specify a base register used with this memory operand (Base + Index * Scale + Displacement)");
-					//			writer.WriteLine("/// </summary>");
-					//			writer.WriteLine("/// <param name=\"register\">Size of this memory operand.</param>");
-					//			writer.WriteLine($"public AssemblerMemoryOperand this[{className} register] => new AssemblerMemoryOperand(Size, Segment, register, {regNoneName}, 1, 0, Flags);");
-					//		}
-					//		writer.WriteLine("}");
-					//	}
-					//}
 				}
 				writer.WriteLine("}");
 				writer.WriteLineNoIndent("#endif");
@@ -525,7 +307,11 @@ namespace Generator.Assembler.CPlusPlus {
 				writer.WriteLineNoIndent($"#if {CPlusPlusConstants.CodeAssemblerDefine}");
 				writer.WriteLine("#include <cstdint>");
 				writer.WriteLine("#include <stdexcept>");
+				writer.WriteLine("#include <string>");
 				writer.WriteLine("#include \"../Register.g.h\"");
+				writer.WriteLine("#include \"../RegisterExtensions.h\"");
+				writer.WriteLine("#include \"../ToString.h\"");
+				writer.WriteLine("#include \"AssemblerRegister.defs.g.h\"");
 				writer.WriteLine("#include \"AssemblerMemoryOperand.h\"");
 				writer.WriteLine();
 
@@ -575,7 +361,7 @@ namespace Generator.Assembler.CPlusPlus {
 							using (writer.Indent()) {
 								writer.WriteLine($"if (!RegisterExtensions::Is{isName}(value))");
 								using (writer.Indent())
-									writer.WriteLine($"throw std::invalid_argument($\"Invalid register value. Must be a {isName} register\");");
+									writer.WriteLine($"throw std::invalid_argument(\"Invalid register value. Must be a {isName} register\");");
 							}
 							writer.WriteLine("}");
 							for (int j = 1; j <= 7; j++) {
@@ -584,8 +370,8 @@ namespace Generator.Assembler.CPlusPlus {
 								using (writer.Indent()) {
 									writer.WriteLine($"return {className}(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K{j});");
 								}
+								writer.WriteLine("}");
 							}
-							writer.WriteLine("}");
 							writer.WriteLine();
 							writer.WriteLine($"constexpr {className} {className}::z() const {{");
 							using (writer.Indent()) {
@@ -670,13 +456,13 @@ namespace Generator.Assembler.CPlusPlus {
 						if (reg.NeedsState) {
 							writer.WriteLine();
 							writer.WriteLine("/// <inheritdoc />");
-							writer.WriteLine($"constexpr int {className}::GetHashCode() const {{");
+							writer.WriteLine($"constexpr std::size_t {className}::GetHashCode() const {{");
 							using (writer.Indent()) {
-								writer.WriteLine("return ((int)Value * 397) ^ (int)Flags;");
+								writer.WriteLine("return ((std::size_t)Value * 397) ^ (std::size_t)Flags;");
 							}
 							writer.WriteLine("}");
 							writer.WriteLine();
-							writer.WriteLine($"constexpr bool {className}:: ==(const {className}& right) const {{");
+							writer.WriteLine($"constexpr bool {className}::operator ==(const {className}& right) const {{");
 							using (writer.Indent()) {
 								writer.WriteLine("return Value == right.Value && Flags == right.Flags;");
 							}
@@ -691,9 +477,9 @@ namespace Generator.Assembler.CPlusPlus {
 						else {
 							writer.WriteLine();
 							writer.WriteLine("/// <inheritdoc />");
-							writer.WriteLine($"constexpr int {className}::GetHashCode() const {{");
+							writer.WriteLine($"constexpr std::size_t {className}::GetHashCode() const {{");
 							using (writer.Indent()) {
-								writer.WriteLine("return Value;");
+								writer.WriteLine("return (std::size_t)Value;");
 							}
 							writer.WriteLine("}");
 							writer.WriteLine();
@@ -708,13 +494,19 @@ namespace Generator.Assembler.CPlusPlus {
 								writer.WriteLine("return Value != right.Value;");
 							}
 							writer.WriteLine("}");
+							writer.WriteLine();
+							writer.WriteLine($"constexpr bool {className}::operator ==(const {registerTypeName}& right) const {{");
+							using (writer.Indent()) {
+								writer.WriteLine("return Value == right;");
+							}
+							writer.WriteLine("}");
 						}
-						writer.WriteLine();
-						writer.WriteLine($"constexpr bool {className}::operator ==(const {registerTypeName}& right) const {{");
+						writer.WriteLine("/// <inheritdoc />");
+						writer.WriteLine($"constexpr std::string {className}::ToString() const {{");
 						using (writer.Indent()) {
-							writer.WriteLine("return Value == right;");
+							writer.WriteLine("return Iced::Intel::ToString(Value);");
 						}
-						writer.WriteLine("}");
+						writer.WriteLine("};");
 						writer.WriteLine();
 						if (reg.IsGPR16_32_64) {
 							writer.WriteLine("/// <summary>");
@@ -735,6 +527,27 @@ namespace Generator.Assembler.CPlusPlus {
 				writer.WriteLine("}");
 				writer.WriteLineNoIndent("#endif");
 			}
+
+			filename = CPlusPlusConstants.GetFilename(genTypes, CPlusPlusConstants.IcedNamespace, "Assembler", "AssemblerMemoryOperandFactory.RegisterFunctions.g.h");
+			using (var writer = new FileWriter(TargetLanguage.CPlusPlus, FileUtils.OpenWrite(filename))) {
+				writer.WriteFileHeader();
+				var regNoneName = idConverter.ToDeclTypeAndValue(registerType[nameof(Register.None)]);
+				for (int i = 0; i < infos.Length; i++) {
+					var reg = infos[i];
+					var className = $"AssemblerRegister{GetRegisterSuffix(reg.Kind)}";
+					if (reg.IsGPR16_32_64) {
+						writer.WriteLine("/// <summary>");
+						writer.WriteLine("/// Specify a base register used with this memory operand (Base + Index * Scale + Displacement)");
+						writer.WriteLine("/// </summary>");
+						writer.WriteLine("/// <param name=\"register\">Size of this memory operand.</param>");
+						writer.WriteLine($"constexpr AssemblerMemoryOperand operator[]({className} register_) const {{");
+						using (writer.Indent()) {
+							writer.WriteLine($"return AssemblerMemoryOperand(Size, Segment, register_, {regNoneName}, 1, 0, Flags);");
+						}
+						writer.WriteLine("}");
+					}
+				}
+			}
 		}
 
 		static string GetName(MemorySizeFuncInfo fn) {
@@ -751,7 +564,8 @@ namespace Generator.Assembler.CPlusPlus {
 				writer.WriteFileHeader();
 				writer.WriteLineNoIndent($"#if {CPlusPlusConstants.CodeAssemblerDefine}");
 				writer.WriteLine("#include \"AssemblerMemoryOperandFactory.h\"");
-				writer.WriteLine("#include \"../Registers.h\"");
+				writer.WriteLine("#include \"../Register.g.h\"");
+				writer.WriteLine();
 
 				var regNoneStr = idConverter.ToDeclTypeAndValue(registerType[nameof(Register.None)]);
 
@@ -791,30 +605,21 @@ namespace Generator.Assembler.CPlusPlus {
 		}
 
 		void GenerateCode(OpCodeInfoGroup[] groups) {
-			var filename = CPlusPlusConstants.GetFilename(genTypes, CPlusPlusConstants.IcedNamespace, "Assembler", "Assembler.g.h");
+			var filename = CPlusPlusConstants.GetFilename(genTypes, CPlusPlusConstants.IcedNamespace, "Assembler", "Assembler.Functions.g.h");
 			using (var writer = new FileWriter(TargetLanguage.CPlusPlus, FileUtils.OpenWrite(filename))) {
-				//writer.WriteFileHeader();
-				//writer.WriteLineNoIndent($"#if {CPlusPlusConstants.CodeAssemblerDefine}");
-				//writer.WriteLine($"namespace {CPlusPlusConstants.IcedNamespace} {{");
-				//using (writer.Indent()) {
-				//	writer.WriteLine("public partial class Assembler {");
-				//	using (writer.Indent()) {
-						bool methodSep = false;
-						foreach (var group in groups) {
-							if (methodSep)
-								writer.WriteLine();
-							methodSep = true;
-							var renderArgs = GetRenderArgs(group);
-							var methodName = idConverter.Method(group.Name);
-							GenerateAssemblerCode(writer, methodName, group, renderArgs);
-						}
+				writer.WriteFileHeader();
 
-						GenerateDeclareDataCode(writer);
-				//	}
-				//	writer.WriteLine("}");
-				//}
-				//writer.WriteLine("}");
-				//writer.WriteLineNoIndent("#endif");
+				bool methodSep = false;
+				foreach (var group in groups) {
+					if (methodSep)
+						writer.WriteLine();
+					methodSep = true;
+					var renderArgs = GetRenderArgs(group);
+					var methodName = idConverter.Method(group.Name);
+					GenerateAssemblerCode(writer, methodName, group, renderArgs);
+				}
+
+				GenerateDeclareDataCode(writer);
 			}
 		}
 
@@ -843,7 +648,7 @@ namespace Generator.Assembler.CPlusPlus {
 								if (typeIndex == 0)
 									writer.Write($"imm{j}");
 								else
-									writer.Write(isUnsafe ? $"*({types[0]}*)&imm{j}" : $"({types[0]})imm{j}");
+									writer.Write(isUnsafe ? $"std::bit_cast<{types[0]}>(imm{j})" : $"({types[0]})imm{j}");
 							}
 
 							writer.WriteLine("));");
@@ -870,64 +675,64 @@ namespace Generator.Assembler.CPlusPlus {
 				string argType;
 				switch (argKind) {
 				case ArgKind.Register8:
-					argType = "AssemblerRegister8";
+					argType = "Iced::Intel::AssemblerRegister8";
 					break;
 				case ArgKind.Register16:
-					argType = "AssemblerRegister16";
+					argType = "Iced::Intel::AssemblerRegister16";
 					break;
 				case ArgKind.Register32:
-					argType = "AssemblerRegister32";
+					argType = "Iced::Intel::AssemblerRegister32";
 					break;
 				case ArgKind.Register64:
-					argType = "AssemblerRegister64";
+					argType = "Iced::Intel::AssemblerRegister64";
 					break;
 				case ArgKind.RegisterMm:
-					argType = "AssemblerRegisterMM";
+					argType = "Iced::Intel::AssemblerRegisterMM";
 					break;
 				case ArgKind.RegisterXmm:
-					argType = "AssemblerRegisterXMM";
+					argType = "Iced::Intel::AssemblerRegisterXMM";
 					break;
 				case ArgKind.RegisterYmm:
-					argType = "AssemblerRegisterYMM";
+					argType = "Iced::Intel::AssemblerRegisterYMM";
 					break;
 				case ArgKind.RegisterZmm:
-					argType = "AssemblerRegisterZMM";
+					argType = "Iced::Intel::AssemblerRegisterZMM";
 					break;
 				case ArgKind.RegisterTmm:
-					argType = "AssemblerRegisterTMM";
+					argType = "Iced::Intel::AssemblerRegisterTMM";
 					break;
 				case ArgKind.RegisterK:
-					argType = "AssemblerRegisterK";
+					argType = "Iced::Intel::AssemblerRegisterK";
 					break;
 				case ArgKind.RegisterCr:
-					argType = "AssemblerRegisterCR";
+					argType = "Iced::Intel::AssemblerRegisterCR";
 					break;
 				case ArgKind.RegisterTr:
-					argType = "AssemblerRegisterTR";
+					argType = "Iced::Intel::AssemblerRegisterTR";
 					break;
 				case ArgKind.RegisterDr:
-					argType = "AssemblerRegisterDR";
+					argType = "Iced::Intel::AssemblerRegisterDR";
 					break;
 				case ArgKind.RegisterSt:
-					argType = "AssemblerRegisterST";
+					argType = "Iced::Intel::AssemblerRegisterST";
 					break;
 				case ArgKind.RegisterBnd:
-					argType = "AssemblerRegisterBND";
+					argType = "Iced::Intel::AssemblerRegisterBND";
 					break;
 				case ArgKind.RegisterSegment:
-					argType = "AssemblerRegisterSegment";
+					argType = "Iced::Intel::AssemblerRegisterSegment";
 					break;
 
 				case ArgKind.Label:
-					argType = "Label";
+					argType = "const Iced::Intel::Label&";
 					break;
 
 				case ArgKind.LabelU64:
-					argType = "ulong";
+					argType = "std::uint64_t";
 					break;
 
 				case ArgKind.Memory:
-					argType = "AssemblerMemoryOperand";
+					argType = "Iced::Intel::AssemblerMemoryOperand";
 					break;
 
 				case ArgKind.Immediate:
@@ -936,19 +741,19 @@ namespace Generator.Assembler.CPlusPlus {
 					immArg++;
 					if (argKind == ArgKind.Immediate) {
 						argType = maxArgSize switch {
-							1 => "sbyte",
-							2 => "short",
-							4 => "int",
-							8 => "long",
+							1 => "std::int8_t",
+							2 => "std::int16_t",
+							4 => "std::int32_t",
+							8 => "std::int64_t",
 							_ => throw new InvalidOperationException(),
 						};
 					}
 					else {
 						argType = maxArgSize switch {
-							1 => "byte",
-							2 => "ushort",
-							4 => "uint",
-							8 => "ulong",
+							1 => "std::uint8_t",
+							2 => "std::uint16_t",
+							4 => "std::uint32_t",
+							8 => "std::uint64_t",
 							_ => throw new InvalidOperationException(),
 						};
 					}
@@ -1012,7 +817,7 @@ namespace Generator.Assembler.CPlusPlus {
 						writer.Write(renderArg.Name);
 					}
 					writer.Write(", ");
-					writer.Write($"{group.PseudoOpsKindImmediateValue}");
+					writer.Write($"(std::uint8_t){group.PseudoOpsKindImmediateValue}");
 					writer.WriteLine(");");
 				}
 				else {
@@ -1223,7 +1028,7 @@ namespace Generator.Assembler.CPlusPlus {
 			if (node.Def is InstructionDef def) {
 				if (isLeaf)
 					writer.Write("code = ");
-				writer.Write($"Code.{def.Code.Name(idConverter)}");
+				writer.Write($"Code::{def.Code.Name(idConverter)}");
 				if (isLeaf)
 					writer.WriteLine(";");
 			}
@@ -1247,7 +1052,7 @@ namespace Generator.Assembler.CPlusPlus {
 					else {
 						writer.WriteLine("{");
 						using (writer.Indent()) {
-							writer.Write($"throw NoOpCodeFoundFor(Mnemonic.{group.MnemonicName}");
+							writer.Write($"throw NoOpCodeFoundFor(Mnemonic::{group.MnemonicName}");
 							for (var i = 0; i < args.Length; i++) {
 								var renderArg = args[i];
 								writer.Write(", ");
@@ -1269,34 +1074,34 @@ namespace Generator.Assembler.CPlusPlus {
 			var argName = arg.Name;
 			var otherArgName = arg.Name == "src" ? "dst" : "src";
 			return selectorKind switch {
-				OpCodeSelectorKind.MemOffs64_RAX => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.RAX))} && Bitness == 64 && {argName}.IsDisplacementOnly",
-				OpCodeSelectorKind.MemOffs64_EAX => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.EAX))} && Bitness == 64 && {argName}.IsDisplacementOnly",
-				OpCodeSelectorKind.MemOffs64_AX => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.AX))} && Bitness == 64 && {argName}.IsDisplacementOnly",
-				OpCodeSelectorKind.MemOffs64_AL => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.AL))} && Bitness == 64 && {argName}.IsDisplacementOnly",
-				OpCodeSelectorKind.MemOffs_RAX => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.RAX))} && Bitness < 64 && {argName}.IsDisplacementOnly",
-				OpCodeSelectorKind.MemOffs_EAX => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.EAX))} && Bitness < 64 && {argName}.IsDisplacementOnly",
-				OpCodeSelectorKind.MemOffs_AX => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.AX))} && Bitness < 64 && {argName}.IsDisplacementOnly",
-				OpCodeSelectorKind.MemOffs_AL => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.AL))} && Bitness < 64 && {argName}.IsDisplacementOnly",
+				OpCodeSelectorKind.MemOffs64_RAX => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.RAX))} && Bitness == 64 && {argName}.IsDisplacementOnly()",
+				OpCodeSelectorKind.MemOffs64_EAX => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.EAX))} && Bitness == 64 && {argName}.IsDisplacementOnly()",
+				OpCodeSelectorKind.MemOffs64_AX => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.AX))} && Bitness == 64 && {argName}.IsDisplacementOnly()",
+				OpCodeSelectorKind.MemOffs64_AL => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.AL))} && Bitness == 64 && {argName}.IsDisplacementOnly()",
+				OpCodeSelectorKind.MemOffs_RAX => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.RAX))} && Bitness < 64 && {argName}.IsDisplacementOnly()",
+				OpCodeSelectorKind.MemOffs_EAX => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.EAX))} && Bitness < 64 && {argName}.IsDisplacementOnly()",
+				OpCodeSelectorKind.MemOffs_AX => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.AX))} && Bitness < 64 && {argName}.IsDisplacementOnly()",
+				OpCodeSelectorKind.MemOffs_AL => $"{otherArgName}.Value == {GetRegisterString(nameof(Register.AL))} && Bitness < 64 && {argName}.IsDisplacementOnly()",
 				OpCodeSelectorKind.Bitness64 => "Bitness == 64",
 				OpCodeSelectorKind.Bitness32 => "Bitness >= 32",
 				OpCodeSelectorKind.Bitness16 => "Bitness >= 16",
 				OpCodeSelectorKind.ShortBranch => "PreferShortBranch",
 				OpCodeSelectorKind.ImmediateByteEqual1 => $"{argName} == 1",
 				OpCodeSelectorKind.ImmediateByteSigned8To32 or OpCodeSelectorKind.ImmediateByteSigned8To64 => arg.Kind == ArgKind.ImmediateUnsigned ?
-					$"{argName} <= ({arg.Type})sbyte.MaxValue || 0xFFFF_FF80 <= {argName}" :
-					$"{argName} >= sbyte.MinValue && {argName} <= sbyte.MaxValue",
+					$"{argName} <= ({arg.Type})std::numeric_limits<std::int8_t>::max() || 0xFFFF'FF80 <= {argName}" :
+					$"{argName} >= std::numeric_limits<std::uint8_t>::min() && {argName} <= std::numeric_limits<std::uint8_t>::max()",
 				OpCodeSelectorKind.ImmediateByteSigned8To16 => arg.Kind == ArgKind.ImmediateUnsigned ?
-					$"{argName} <= ({arg.Type})sbyte.MaxValue || (0xFF80 <= {argName} && {argName} <= 0xFFFF)" :
-					$"{argName} >= sbyte.MinValue && {argName} <= sbyte.MaxValue",
-				OpCodeSelectorKind.Vex => "InstructionPreferVex",
+					$"{argName} <= ({arg.Type})std::numeric_limits<std::uint8_t>::max() || (0xFF80 <= {argName} && {argName} <= 0xFFFF)" :
+					$"{argName} >= std::numeric_limits<std::uint8_t>::min() && {argName} <= std::numeric_limits<std::uint8_t>::max()",
+				OpCodeSelectorKind.Vex => "GetInstructionPreferVex()",
 				OpCodeSelectorKind.EvexBroadcastX or OpCodeSelectorKind.EvexBroadcastY or OpCodeSelectorKind.EvexBroadcastZ =>
-					$"{argName}.IsBroadcast",
+					$"{argName}.IsBroadcast()",
 				OpCodeSelectorKind.RegisterCL => $"{argName} == {GetRegisterString(nameof(Register.CL))}",
 				OpCodeSelectorKind.RegisterAL => $"{argName} == {GetRegisterString(nameof(Register.AL))}",
 				OpCodeSelectorKind.RegisterAX => $"{argName} == {GetRegisterString(nameof(Register.AX))}",
 				OpCodeSelectorKind.RegisterEAX => $"{argName} == {GetRegisterString(nameof(Register.EAX))}",
 				OpCodeSelectorKind.RegisterRAX => $"{argName} == {GetRegisterString(nameof(Register.RAX))}",
-				OpCodeSelectorKind.RegisterBND => $"{argName}.IsBND()",
+				OpCodeSelectorKind.RegisterBND => $"RegisterExtensions::IsBND({argName})",
 				OpCodeSelectorKind.RegisterES => $"{argName} == {GetRegisterString(nameof(Register.ES))}",
 				OpCodeSelectorKind.RegisterCS => $"{argName} == {GetRegisterString(nameof(Register.CS))}",
 				OpCodeSelectorKind.RegisterSS => $"{argName} == {GetRegisterString(nameof(Register.SS))}",
@@ -1304,22 +1109,22 @@ namespace Generator.Assembler.CPlusPlus {
 				OpCodeSelectorKind.RegisterFS => $"{argName} == {GetRegisterString(nameof(Register.FS))}",
 				OpCodeSelectorKind.RegisterGS => $"{argName} == {GetRegisterString(nameof(Register.GS))}",
 				OpCodeSelectorKind.RegisterDX => $"{argName} == {GetRegisterString(nameof(Register.DX))}",
-				OpCodeSelectorKind.Register8 => $"{argName}.IsGPR8()",
-				OpCodeSelectorKind.Register16 => $"{argName}.IsGPR16()",
-				OpCodeSelectorKind.Register32 => $"{argName}.IsGPR32()",
-				OpCodeSelectorKind.Register64 => $"{argName}.IsGPR64()",
-				OpCodeSelectorKind.RegisterK => $"{argName}.IsK()",
+				OpCodeSelectorKind.Register8 => $"RegisterExtensions::IsGPR8({argName})",
+				OpCodeSelectorKind.Register16 => $"RegisterExtensions::IsGPR16({argName})",
+				OpCodeSelectorKind.Register32 => $"RegisterExtensions::IsGPR32({argName})",
+				OpCodeSelectorKind.Register64 => $"RegisterExtensions::IsGPR64({argName})",
+				OpCodeSelectorKind.RegisterK => $"RegisterExtensions::IsK({argName})",
 				OpCodeSelectorKind.RegisterST0 => $"{argName} == {GetRegisterString(nameof(Register.ST0))}",
-				OpCodeSelectorKind.RegisterST => $"{argName}.IsST()",
-				OpCodeSelectorKind.RegisterSegment => $"{argName}.IsSegmentRegister()",
-				OpCodeSelectorKind.RegisterCR => $"{argName}.IsCR()",
-				OpCodeSelectorKind.RegisterDR => $"{argName}.IsDR()",
-				OpCodeSelectorKind.RegisterTR => $"{argName}.IsTR()",
-				OpCodeSelectorKind.RegisterMM => $"{argName}.IsMM()",
-				OpCodeSelectorKind.RegisterXMM => $"{argName}.IsXMM()",
-				OpCodeSelectorKind.RegisterYMM => $"{argName}.IsYMM()",
-				OpCodeSelectorKind.RegisterZMM => $"{argName}.IsZMM()",
-				OpCodeSelectorKind.RegisterTMM => $"{argName}.IsTMM()",
+				OpCodeSelectorKind.RegisterST => $"RegisterExtensions::IsST({argName})",
+				OpCodeSelectorKind.RegisterSegment => $"RegisterExtensions::IsSegmentRegister({argName})",
+				OpCodeSelectorKind.RegisterCR => $"RegisterExtensions::IsCR({argName})",
+				OpCodeSelectorKind.RegisterDR => $"RegisterExtensions::IsDR({argName})",
+				OpCodeSelectorKind.RegisterTR => $"RegisterExtensions::IsTR({argName})",
+				OpCodeSelectorKind.RegisterMM => $"RegisterExtensions::IsMM({argName})",
+				OpCodeSelectorKind.RegisterXMM => $"RegisterExtensions::IsXMM({argName})",
+				OpCodeSelectorKind.RegisterYMM => $"RegisterExtensions::IsYMM({argName})",
+				OpCodeSelectorKind.RegisterZMM => $"RegisterExtensions::IsZMM({argName})",
+				OpCodeSelectorKind.RegisterTMM => $"RegisterExtensions::IsTMM({argName})",
 				OpCodeSelectorKind.Memory8 => $"{argName}.Size == {GetMemOpSizeString(nameof(MemoryOperandSize.Byte))}",
 				OpCodeSelectorKind.Memory16 => $"{argName}.Size == {GetMemOpSizeString(nameof(MemoryOperandSize.Word))}",
 				OpCodeSelectorKind.Memory32 => $"{argName}.Size == {GetMemOpSizeString(nameof(MemoryOperandSize.Dword))}",
@@ -1330,9 +1135,9 @@ namespace Generator.Assembler.CPlusPlus {
 				OpCodeSelectorKind.MemoryXMM => $"{argName}.Size == {GetMemOpSizeString(nameof(MemoryOperandSize.Xword))}",
 				OpCodeSelectorKind.MemoryYMM => $"{argName}.Size == {GetMemOpSizeString(nameof(MemoryOperandSize.Yword))}",
 				OpCodeSelectorKind.MemoryZMM => $"{argName}.Size == {GetMemOpSizeString(nameof(MemoryOperandSize.Zword))}",
-				OpCodeSelectorKind.MemoryIndex32Xmm or OpCodeSelectorKind.MemoryIndex64Xmm => $"{argName}.Index.IsXMM()",
-				OpCodeSelectorKind.MemoryIndex32Ymm or OpCodeSelectorKind.MemoryIndex64Ymm => $"{argName}.Index.IsYMM()",
-				OpCodeSelectorKind.MemoryIndex32Zmm or OpCodeSelectorKind.MemoryIndex64Zmm => $"{argName}.Index.IsZMM()",
+				OpCodeSelectorKind.MemoryIndex32Xmm or OpCodeSelectorKind.MemoryIndex64Xmm => $"RegisterExtensions::IsXMM({argName}.Index)",
+				OpCodeSelectorKind.MemoryIndex32Ymm or OpCodeSelectorKind.MemoryIndex64Ymm => $"RegisterExtensions::IsYMM({argName}.Index)",
+				OpCodeSelectorKind.MemoryIndex32Zmm or OpCodeSelectorKind.MemoryIndex64Zmm => $"RegisterExtensions::IsZMM({argName}.Index)",
 				_ => throw new InvalidOperationException(),
 			};
 		}

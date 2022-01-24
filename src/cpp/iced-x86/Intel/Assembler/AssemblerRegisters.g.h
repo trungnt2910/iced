@@ -9,7 +9,7 @@ Copyright (C) 2018-present iced project and contributors
 
 #if defined(ENCODER) && defined(BLOCK_ENCODER) && defined(CODE_ASSEMBLER)
 #include "../Register.g.h"
-#include "../AssemblerRegister.g.h"
+#include "AssemblerRegister.g.h"
 
 namespace Iced::Intel {
 	namespace AssemblerRegisters {

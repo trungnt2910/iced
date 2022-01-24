@@ -9,6 +9,7 @@ Copyright (C) 2018-present iced project and contributors
 
 #if defined(ENCODER) && defined(BLOCK_ENCODER) && defined(CODE_ASSEMBLER)
 #include <cstdint>
+#include <string>
 #include "../Register.g.h"
 #include "AssemblerMemoryOperand.h"
 
@@ -55,10 +56,13 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegister8</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegister8 reg) const;
+			constexpr operator Register() const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegister8"/>
@@ -80,7 +84,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -105,7 +109,7 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegister16</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegister16 reg) const;
+			constexpr operator Register() const;
 
 			/// <summary>
 			/// Adds a register (base) to another register (index) and return a memory operand.
@@ -136,7 +140,10 @@ namespace Iced::Intel {
 			constexpr AssemblerMemoryOperand operator *(std::int32_t scale) const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegister16"/>
@@ -158,7 +165,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -257,7 +264,7 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegister32</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegister32 reg) const;
+			constexpr operator Register() const;
 
 			/// <summary>
 			/// Adds a register (base) to another register (index) and return a memory operand.
@@ -309,7 +316,10 @@ namespace Iced::Intel {
 			constexpr AssemblerMemoryOperand operator *(std::int32_t scale) const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegister32"/>
@@ -331,7 +341,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -430,7 +440,7 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegister64</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegister64 reg) const;
+			constexpr operator Register() const;
 
 			/// <summary>
 			/// Adds a register (base) to another register (index) and return a memory operand.
@@ -482,7 +492,10 @@ namespace Iced::Intel {
 			constexpr AssemblerMemoryOperand operator *(std::int32_t scale) const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegister64"/>
@@ -504,7 +517,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -529,10 +542,13 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegisterSegment</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegisterSegment reg) const;
+			constexpr operator Register() const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegisterSegment"/>
@@ -554,7 +570,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -579,10 +595,13 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegisterCR</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegisterCR reg) const;
+			constexpr operator Register() const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegisterCR"/>
@@ -604,7 +623,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -629,10 +648,13 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegisterDR</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegisterDR reg) const;
+			constexpr operator Register() const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegisterDR"/>
@@ -654,7 +676,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -679,10 +701,13 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegisterTR</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegisterTR reg) const;
+			constexpr operator Register() const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegisterTR"/>
@@ -704,7 +729,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -729,10 +754,13 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegisterST</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegisterST reg) const;
+			constexpr operator Register() const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegisterST"/>
@@ -754,7 +782,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -779,10 +807,13 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegisterMM</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegisterMM reg) const;
+			constexpr operator Register() const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegisterMM"/>
@@ -804,7 +835,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -903,7 +934,7 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegisterXMM</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegisterXMM reg) const;
+			constexpr operator Register() const;
 
 			/// <summary>
 			/// Adds a register (base) with a displacement and return a memory operand.
@@ -927,7 +958,10 @@ namespace Iced::Intel {
 			constexpr AssemblerMemoryOperand operator *(std::int32_t scale) const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegisterXMM"/>
@@ -949,7 +983,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -1048,7 +1082,7 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegisterYMM</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegisterYMM reg) const;
+			constexpr operator Register() const;
 
 			/// <summary>
 			/// Adds a register (base) with a displacement and return a memory operand.
@@ -1072,7 +1106,10 @@ namespace Iced::Intel {
 			constexpr AssemblerMemoryOperand operator *(std::int32_t scale) const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegisterYMM"/>
@@ -1094,7 +1131,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -1193,7 +1230,7 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegisterZMM</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegisterZMM reg) const;
+			constexpr operator Register() const;
 
 			/// <summary>
 			/// Adds a register (base) with a displacement and return a memory operand.
@@ -1217,7 +1254,10 @@ namespace Iced::Intel {
 			constexpr AssemblerMemoryOperand operator *(std::int32_t scale) const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegisterZMM"/>
@@ -1239,7 +1279,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -1264,10 +1304,13 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegisterTMM</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegisterTMM reg) const;
+			constexpr operator Register() const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegisterTMM"/>
@@ -1289,7 +1332,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -1363,10 +1406,13 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegisterK</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegisterK reg) const;
+			constexpr operator Register() const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegisterK"/>
@@ -1388,7 +1434,7 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 
 	/// <summary>
 	/// An assembler register used with <see cref="Assembler"/>.
@@ -1413,10 +1459,13 @@ namespace Iced::Intel {
 			/// </summary>
 			/// <param name="reg">AssemblerRegisterBND</param>
 			/// <returns></returns>
-			constexpr operator Register(AssemblerRegisterBND reg) const;
+			constexpr operator Register() const;
 
 			/// <inheritdoc />
-			constexpr int GetHashCode() const;
+			constexpr std::size_t GetHashCode() const;
+
+			/// <inheritdoc />
+			constexpr std::string ToString() const;
 
 			/// <summary>
 			/// Equality operator for <see cref="AssemblerRegisterBND"/>
@@ -1438,6 +1487,6 @@ namespace Iced::Intel {
 			/// <param name="right">Register</param>
 			/// <returns></returns>
 			constexpr bool operator ==(const Register& right) const;
-	}
+	};
 }
 #endif

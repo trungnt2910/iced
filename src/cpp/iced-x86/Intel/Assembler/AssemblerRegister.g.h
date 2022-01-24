@@ -10,7 +10,11 @@ Copyright (C) 2018-present iced project and contributors
 #if defined(ENCODER) && defined(BLOCK_ENCODER) && defined(CODE_ASSEMBLER)
 #include <cstdint>
 #include <stdexcept>
+#include <string>
 #include "../Register.g.h"
+#include "../RegisterExtensions.h"
+#include "../ToString.h"
+#include "AssemblerRegister.defs.g.h"
 #include "AssemblerMemoryOperand.h"
 
 namespace Iced::Intel {
@@ -26,8 +30,8 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegister8::GetHashCode() const {
-		return Value;
+	constexpr std::size_t AssemblerRegister8::GetHashCode() const {
+		return (std::size_t)Value;
 	}
 
 	constexpr bool AssemblerRegister8::operator ==(const AssemblerRegister8& right) const {
@@ -41,6 +45,10 @@ namespace Iced::Intel {
 	constexpr bool AssemblerRegister8::operator ==(const Register& right) const {
 		return Value == right;
 	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegister8::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 
 	constexpr AssemblerRegister16::AssemblerRegister16(Register value) : Value(value) {
@@ -70,8 +78,8 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegister16::GetHashCode() const {
-		return Value;
+	constexpr std::size_t AssemblerRegister16::GetHashCode() const {
+		return (std::size_t)Value;
 	}
 
 	constexpr bool AssemblerRegister16::operator ==(const AssemblerRegister16& right) const {
@@ -85,6 +93,10 @@ namespace Iced::Intel {
 	constexpr bool AssemblerRegister16::operator ==(const Register& right) const {
 		return Value == right;
 	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegister16::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 	/// <summary>
 	/// Adds a 16-bit memory operand with an new base or index.
@@ -105,26 +117,32 @@ namespace Iced::Intel {
 
 	constexpr AssemblerRegister32::AssemblerRegister32(Register value, AssemblerOperandFlags flags) : Value(value), Flags(flags) {
 		if (!RegisterExtensions::IsGPR32(value))
-			throw std::invalid_argument($"Invalid register value. Must be a GPR32 register");
+			throw std::invalid_argument("Invalid register value. Must be a GPR32 register");
 	}
 
 	constexpr AssemblerRegister32 AssemblerRegister32::k1() const {
 		return AssemblerRegister32(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K1);
+	}
 
 	constexpr AssemblerRegister32 AssemblerRegister32::k2() const {
 		return AssemblerRegister32(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K2);
+	}
 
 	constexpr AssemblerRegister32 AssemblerRegister32::k3() const {
 		return AssemblerRegister32(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K3);
+	}
 
 	constexpr AssemblerRegister32 AssemblerRegister32::k4() const {
 		return AssemblerRegister32(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K4);
+	}
 
 	constexpr AssemblerRegister32 AssemblerRegister32::k5() const {
 		return AssemblerRegister32(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K5);
+	}
 
 	constexpr AssemblerRegister32 AssemblerRegister32::k6() const {
 		return AssemblerRegister32(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K6);
+	}
 
 	constexpr AssemblerRegister32 AssemblerRegister32::k7() const {
 		return AssemblerRegister32(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K7);
@@ -188,21 +206,21 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegister32::GetHashCode() const {
-		return ((int)Value * 397) ^ (int)Flags;
+	constexpr std::size_t AssemblerRegister32::GetHashCode() const {
+		return ((std::size_t)Value * 397) ^ (std::size_t)Flags;
 	}
 
-	constexpr bool AssemblerRegister32:: ==(const AssemblerRegister32& right) const {
+	constexpr bool AssemblerRegister32::operator ==(const AssemblerRegister32& right) const {
 		return Value == right.Value && Flags == right.Flags;
 	}
 
 	constexpr bool AssemblerRegister32::operator !=(const AssemblerRegister32& right) const {
 		return Value != right.Value || Flags != right.Flags;
 	}
-
-	constexpr bool AssemblerRegister32::operator ==(const Register& right) const {
-		return Value == right;
-	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegister32::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 	/// <summary>
 	/// Adds a 32-bit memory operand with an new base or index.
@@ -223,26 +241,32 @@ namespace Iced::Intel {
 
 	constexpr AssemblerRegister64::AssemblerRegister64(Register value, AssemblerOperandFlags flags) : Value(value), Flags(flags) {
 		if (!RegisterExtensions::IsGPR64(value))
-			throw std::invalid_argument($"Invalid register value. Must be a GPR64 register");
+			throw std::invalid_argument("Invalid register value. Must be a GPR64 register");
 	}
 
 	constexpr AssemblerRegister64 AssemblerRegister64::k1() const {
 		return AssemblerRegister64(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K1);
+	}
 
 	constexpr AssemblerRegister64 AssemblerRegister64::k2() const {
 		return AssemblerRegister64(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K2);
+	}
 
 	constexpr AssemblerRegister64 AssemblerRegister64::k3() const {
 		return AssemblerRegister64(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K3);
+	}
 
 	constexpr AssemblerRegister64 AssemblerRegister64::k4() const {
 		return AssemblerRegister64(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K4);
+	}
 
 	constexpr AssemblerRegister64 AssemblerRegister64::k5() const {
 		return AssemblerRegister64(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K5);
+	}
 
 	constexpr AssemblerRegister64 AssemblerRegister64::k6() const {
 		return AssemblerRegister64(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K6);
+	}
 
 	constexpr AssemblerRegister64 AssemblerRegister64::k7() const {
 		return AssemblerRegister64(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K7);
@@ -306,21 +330,21 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegister64::GetHashCode() const {
-		return ((int)Value * 397) ^ (int)Flags;
+	constexpr std::size_t AssemblerRegister64::GetHashCode() const {
+		return ((std::size_t)Value * 397) ^ (std::size_t)Flags;
 	}
 
-	constexpr bool AssemblerRegister64:: ==(const AssemblerRegister64& right) const {
+	constexpr bool AssemblerRegister64::operator ==(const AssemblerRegister64& right) const {
 		return Value == right.Value && Flags == right.Flags;
 	}
 
 	constexpr bool AssemblerRegister64::operator !=(const AssemblerRegister64& right) const {
 		return Value != right.Value || Flags != right.Flags;
 	}
-
-	constexpr bool AssemblerRegister64::operator ==(const Register& right) const {
-		return Value == right;
-	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegister64::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 	/// <summary>
 	/// Adds a 64-bit memory operand with an new base or index.
@@ -344,8 +368,8 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegisterSegment::GetHashCode() const {
-		return Value;
+	constexpr std::size_t AssemblerRegisterSegment::GetHashCode() const {
+		return (std::size_t)Value;
 	}
 
 	constexpr bool AssemblerRegisterSegment::operator ==(const AssemblerRegisterSegment& right) const {
@@ -359,6 +383,10 @@ namespace Iced::Intel {
 	constexpr bool AssemblerRegisterSegment::operator ==(const Register& right) const {
 		return Value == right;
 	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegisterSegment::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 
 	constexpr AssemblerRegisterCR::AssemblerRegisterCR(Register value) : Value(value) {
@@ -372,8 +400,8 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegisterCR::GetHashCode() const {
-		return Value;
+	constexpr std::size_t AssemblerRegisterCR::GetHashCode() const {
+		return (std::size_t)Value;
 	}
 
 	constexpr bool AssemblerRegisterCR::operator ==(const AssemblerRegisterCR& right) const {
@@ -387,6 +415,10 @@ namespace Iced::Intel {
 	constexpr bool AssemblerRegisterCR::operator ==(const Register& right) const {
 		return Value == right;
 	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegisterCR::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 
 	constexpr AssemblerRegisterDR::AssemblerRegisterDR(Register value) : Value(value) {
@@ -400,8 +432,8 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegisterDR::GetHashCode() const {
-		return Value;
+	constexpr std::size_t AssemblerRegisterDR::GetHashCode() const {
+		return (std::size_t)Value;
 	}
 
 	constexpr bool AssemblerRegisterDR::operator ==(const AssemblerRegisterDR& right) const {
@@ -415,6 +447,10 @@ namespace Iced::Intel {
 	constexpr bool AssemblerRegisterDR::operator ==(const Register& right) const {
 		return Value == right;
 	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegisterDR::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 
 	constexpr AssemblerRegisterTR::AssemblerRegisterTR(Register value) : Value(value) {
@@ -428,8 +464,8 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegisterTR::GetHashCode() const {
-		return Value;
+	constexpr std::size_t AssemblerRegisterTR::GetHashCode() const {
+		return (std::size_t)Value;
 	}
 
 	constexpr bool AssemblerRegisterTR::operator ==(const AssemblerRegisterTR& right) const {
@@ -443,6 +479,10 @@ namespace Iced::Intel {
 	constexpr bool AssemblerRegisterTR::operator ==(const Register& right) const {
 		return Value == right;
 	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegisterTR::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 
 	constexpr AssemblerRegisterST::AssemblerRegisterST(Register value) : Value(value) {
@@ -456,8 +496,8 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegisterST::GetHashCode() const {
-		return Value;
+	constexpr std::size_t AssemblerRegisterST::GetHashCode() const {
+		return (std::size_t)Value;
 	}
 
 	constexpr bool AssemblerRegisterST::operator ==(const AssemblerRegisterST& right) const {
@@ -471,6 +511,10 @@ namespace Iced::Intel {
 	constexpr bool AssemblerRegisterST::operator ==(const Register& right) const {
 		return Value == right;
 	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegisterST::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 
 	constexpr AssemblerRegisterMM::AssemblerRegisterMM(Register value) : Value(value) {
@@ -484,8 +528,8 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegisterMM::GetHashCode() const {
-		return Value;
+	constexpr std::size_t AssemblerRegisterMM::GetHashCode() const {
+		return (std::size_t)Value;
 	}
 
 	constexpr bool AssemblerRegisterMM::operator ==(const AssemblerRegisterMM& right) const {
@@ -499,6 +543,10 @@ namespace Iced::Intel {
 	constexpr bool AssemblerRegisterMM::operator ==(const Register& right) const {
 		return Value == right;
 	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegisterMM::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 
 	constexpr AssemblerRegisterXMM::AssemblerRegisterXMM(Register value) : Value(value), Flags(AssemblerOperandFlags::None) {
@@ -509,26 +557,32 @@ namespace Iced::Intel {
 
 	constexpr AssemblerRegisterXMM::AssemblerRegisterXMM(Register value, AssemblerOperandFlags flags) : Value(value), Flags(flags) {
 		if (!RegisterExtensions::IsXMM(value))
-			throw std::invalid_argument($"Invalid register value. Must be a XMM register");
+			throw std::invalid_argument("Invalid register value. Must be a XMM register");
 	}
 
 	constexpr AssemblerRegisterXMM AssemblerRegisterXMM::k1() const {
 		return AssemblerRegisterXMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K1);
+	}
 
 	constexpr AssemblerRegisterXMM AssemblerRegisterXMM::k2() const {
 		return AssemblerRegisterXMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K2);
+	}
 
 	constexpr AssemblerRegisterXMM AssemblerRegisterXMM::k3() const {
 		return AssemblerRegisterXMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K3);
+	}
 
 	constexpr AssemblerRegisterXMM AssemblerRegisterXMM::k4() const {
 		return AssemblerRegisterXMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K4);
+	}
 
 	constexpr AssemblerRegisterXMM AssemblerRegisterXMM::k5() const {
 		return AssemblerRegisterXMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K5);
+	}
 
 	constexpr AssemblerRegisterXMM AssemblerRegisterXMM::k6() const {
 		return AssemblerRegisterXMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K6);
+	}
 
 	constexpr AssemblerRegisterXMM AssemblerRegisterXMM::k7() const {
 		return AssemblerRegisterXMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K7);
@@ -576,21 +630,21 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegisterXMM::GetHashCode() const {
-		return ((int)Value * 397) ^ (int)Flags;
+	constexpr std::size_t AssemblerRegisterXMM::GetHashCode() const {
+		return ((std::size_t)Value * 397) ^ (std::size_t)Flags;
 	}
 
-	constexpr bool AssemblerRegisterXMM:: ==(const AssemblerRegisterXMM& right) const {
+	constexpr bool AssemblerRegisterXMM::operator ==(const AssemblerRegisterXMM& right) const {
 		return Value == right.Value && Flags == right.Flags;
 	}
 
 	constexpr bool AssemblerRegisterXMM::operator !=(const AssemblerRegisterXMM& right) const {
 		return Value != right.Value || Flags != right.Flags;
 	}
-
-	constexpr bool AssemblerRegisterXMM::operator ==(const Register& right) const {
-		return Value == right;
-	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegisterXMM::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 
 	constexpr AssemblerRegisterYMM::AssemblerRegisterYMM(Register value) : Value(value), Flags(AssemblerOperandFlags::None) {
@@ -601,26 +655,32 @@ namespace Iced::Intel {
 
 	constexpr AssemblerRegisterYMM::AssemblerRegisterYMM(Register value, AssemblerOperandFlags flags) : Value(value), Flags(flags) {
 		if (!RegisterExtensions::IsYMM(value))
-			throw std::invalid_argument($"Invalid register value. Must be a YMM register");
+			throw std::invalid_argument("Invalid register value. Must be a YMM register");
 	}
 
 	constexpr AssemblerRegisterYMM AssemblerRegisterYMM::k1() const {
 		return AssemblerRegisterYMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K1);
+	}
 
 	constexpr AssemblerRegisterYMM AssemblerRegisterYMM::k2() const {
 		return AssemblerRegisterYMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K2);
+	}
 
 	constexpr AssemblerRegisterYMM AssemblerRegisterYMM::k3() const {
 		return AssemblerRegisterYMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K3);
+	}
 
 	constexpr AssemblerRegisterYMM AssemblerRegisterYMM::k4() const {
 		return AssemblerRegisterYMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K4);
+	}
 
 	constexpr AssemblerRegisterYMM AssemblerRegisterYMM::k5() const {
 		return AssemblerRegisterYMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K5);
+	}
 
 	constexpr AssemblerRegisterYMM AssemblerRegisterYMM::k6() const {
 		return AssemblerRegisterYMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K6);
+	}
 
 	constexpr AssemblerRegisterYMM AssemblerRegisterYMM::k7() const {
 		return AssemblerRegisterYMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K7);
@@ -668,21 +728,21 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegisterYMM::GetHashCode() const {
-		return ((int)Value * 397) ^ (int)Flags;
+	constexpr std::size_t AssemblerRegisterYMM::GetHashCode() const {
+		return ((std::size_t)Value * 397) ^ (std::size_t)Flags;
 	}
 
-	constexpr bool AssemblerRegisterYMM:: ==(const AssemblerRegisterYMM& right) const {
+	constexpr bool AssemblerRegisterYMM::operator ==(const AssemblerRegisterYMM& right) const {
 		return Value == right.Value && Flags == right.Flags;
 	}
 
 	constexpr bool AssemblerRegisterYMM::operator !=(const AssemblerRegisterYMM& right) const {
 		return Value != right.Value || Flags != right.Flags;
 	}
-
-	constexpr bool AssemblerRegisterYMM::operator ==(const Register& right) const {
-		return Value == right;
-	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegisterYMM::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 
 	constexpr AssemblerRegisterZMM::AssemblerRegisterZMM(Register value) : Value(value), Flags(AssemblerOperandFlags::None) {
@@ -693,26 +753,32 @@ namespace Iced::Intel {
 
 	constexpr AssemblerRegisterZMM::AssemblerRegisterZMM(Register value, AssemblerOperandFlags flags) : Value(value), Flags(flags) {
 		if (!RegisterExtensions::IsZMM(value))
-			throw std::invalid_argument($"Invalid register value. Must be a ZMM register");
+			throw std::invalid_argument("Invalid register value. Must be a ZMM register");
 	}
 
 	constexpr AssemblerRegisterZMM AssemblerRegisterZMM::k1() const {
 		return AssemblerRegisterZMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K1);
+	}
 
 	constexpr AssemblerRegisterZMM AssemblerRegisterZMM::k2() const {
 		return AssemblerRegisterZMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K2);
+	}
 
 	constexpr AssemblerRegisterZMM AssemblerRegisterZMM::k3() const {
 		return AssemblerRegisterZMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K3);
+	}
 
 	constexpr AssemblerRegisterZMM AssemblerRegisterZMM::k4() const {
 		return AssemblerRegisterZMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K4);
+	}
 
 	constexpr AssemblerRegisterZMM AssemblerRegisterZMM::k5() const {
 		return AssemblerRegisterZMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K5);
+	}
 
 	constexpr AssemblerRegisterZMM AssemblerRegisterZMM::k6() const {
 		return AssemblerRegisterZMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K6);
+	}
 
 	constexpr AssemblerRegisterZMM AssemblerRegisterZMM::k7() const {
 		return AssemblerRegisterZMM(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K7);
@@ -760,21 +826,21 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegisterZMM::GetHashCode() const {
-		return ((int)Value * 397) ^ (int)Flags;
+	constexpr std::size_t AssemblerRegisterZMM::GetHashCode() const {
+		return ((std::size_t)Value * 397) ^ (std::size_t)Flags;
 	}
 
-	constexpr bool AssemblerRegisterZMM:: ==(const AssemblerRegisterZMM& right) const {
+	constexpr bool AssemblerRegisterZMM::operator ==(const AssemblerRegisterZMM& right) const {
 		return Value == right.Value && Flags == right.Flags;
 	}
 
 	constexpr bool AssemblerRegisterZMM::operator !=(const AssemblerRegisterZMM& right) const {
 		return Value != right.Value || Flags != right.Flags;
 	}
-
-	constexpr bool AssemblerRegisterZMM::operator ==(const Register& right) const {
-		return Value == right;
-	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegisterZMM::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 
 	constexpr AssemblerRegisterTMM::AssemblerRegisterTMM(Register value) : Value(value) {
@@ -788,8 +854,8 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegisterTMM::GetHashCode() const {
-		return Value;
+	constexpr std::size_t AssemblerRegisterTMM::GetHashCode() const {
+		return (std::size_t)Value;
 	}
 
 	constexpr bool AssemblerRegisterTMM::operator ==(const AssemblerRegisterTMM& right) const {
@@ -803,6 +869,10 @@ namespace Iced::Intel {
 	constexpr bool AssemblerRegisterTMM::operator ==(const Register& right) const {
 		return Value == right;
 	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegisterTMM::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 
 	constexpr AssemblerRegisterK::AssemblerRegisterK(Register value) : Value(value), Flags(AssemblerOperandFlags::None) {
@@ -813,26 +883,32 @@ namespace Iced::Intel {
 
 	constexpr AssemblerRegisterK::AssemblerRegisterK(Register value, AssemblerOperandFlags flags) : Value(value), Flags(flags) {
 		if (!RegisterExtensions::IsK(value))
-			throw std::invalid_argument($"Invalid register value. Must be a K register");
+			throw std::invalid_argument("Invalid register value. Must be a K register");
 	}
 
 	constexpr AssemblerRegisterK AssemblerRegisterK::k1() const {
 		return AssemblerRegisterK(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K1);
+	}
 
 	constexpr AssemblerRegisterK AssemblerRegisterK::k2() const {
 		return AssemblerRegisterK(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K2);
+	}
 
 	constexpr AssemblerRegisterK AssemblerRegisterK::k3() const {
 		return AssemblerRegisterK(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K3);
+	}
 
 	constexpr AssemblerRegisterK AssemblerRegisterK::k4() const {
 		return AssemblerRegisterK(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K4);
+	}
 
 	constexpr AssemblerRegisterK AssemblerRegisterK::k5() const {
 		return AssemblerRegisterK(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K5);
+	}
 
 	constexpr AssemblerRegisterK AssemblerRegisterK::k6() const {
 		return AssemblerRegisterK(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K6);
+	}
 
 	constexpr AssemblerRegisterK AssemblerRegisterK::k7() const {
 		return AssemblerRegisterK(Value, (Flags & ~AssemblerOperandFlags::RegisterMask) | AssemblerOperandFlags::K7);
@@ -848,21 +924,21 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegisterK::GetHashCode() const {
-		return ((int)Value * 397) ^ (int)Flags;
+	constexpr std::size_t AssemblerRegisterK::GetHashCode() const {
+		return ((std::size_t)Value * 397) ^ (std::size_t)Flags;
 	}
 
-	constexpr bool AssemblerRegisterK:: ==(const AssemblerRegisterK& right) const {
+	constexpr bool AssemblerRegisterK::operator ==(const AssemblerRegisterK& right) const {
 		return Value == right.Value && Flags == right.Flags;
 	}
 
 	constexpr bool AssemblerRegisterK::operator !=(const AssemblerRegisterK& right) const {
 		return Value != right.Value || Flags != right.Flags;
 	}
-
-	constexpr bool AssemblerRegisterK::operator ==(const Register& right) const {
-		return Value == right;
-	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegisterK::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 
 	constexpr AssemblerRegisterBND::AssemblerRegisterBND(Register value) : Value(value) {
@@ -876,8 +952,8 @@ namespace Iced::Intel {
 	}
 
 	/// <inheritdoc />
-	constexpr int AssemblerRegisterBND::GetHashCode() const {
-		return Value;
+	constexpr std::size_t AssemblerRegisterBND::GetHashCode() const {
+		return (std::size_t)Value;
 	}
 
 	constexpr bool AssemblerRegisterBND::operator ==(const AssemblerRegisterBND& right) const {
@@ -891,6 +967,10 @@ namespace Iced::Intel {
 	constexpr bool AssemblerRegisterBND::operator ==(const Register& right) const {
 		return Value == right;
 	}
+	/// <inheritdoc />
+	constexpr std::string AssemblerRegisterBND::ToString() const {
+		return Iced::Intel::ToString(Value);
+	};
 
 }
 #endif
