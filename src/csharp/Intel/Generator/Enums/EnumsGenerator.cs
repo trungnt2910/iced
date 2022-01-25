@@ -125,7 +125,16 @@ namespace Generator.Enums {
 				genTypes[TypeIds.MvexInfoFlags2],
 				genTypes[TypeIds.MvexRegMemConv],
 				genTypes[TypeIds.MvexTupleTypeLutKind],
-			};
+				genTypes[TypeIds.ImpliedAccess],
+				genTypes[TypeIds.RflagsInfo],
+				genTypes[TypeIds.OpInfo0],
+				genTypes[TypeIds.OpInfo1],
+				genTypes[TypeIds.OpInfo2],
+				genTypes[TypeIds.OpInfo3],
+				genTypes[TypeIds.OpInfo4],
+				genTypes[TypeIds.InfoFlags1],
+				genTypes[TypeIds.InfoFlags2],
+		};
 
 			GenerateBegin();
 			foreach (var enumType in allEnums)
