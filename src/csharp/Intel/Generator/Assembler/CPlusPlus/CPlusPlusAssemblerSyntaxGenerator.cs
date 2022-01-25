@@ -1089,10 +1089,10 @@ namespace Generator.Assembler.CPlusPlus {
 				OpCodeSelectorKind.ImmediateByteEqual1 => $"{argName} == 1",
 				OpCodeSelectorKind.ImmediateByteSigned8To32 or OpCodeSelectorKind.ImmediateByteSigned8To64 => arg.Kind == ArgKind.ImmediateUnsigned ?
 					$"{argName} <= ({arg.Type})std::numeric_limits<std::int8_t>::max() || 0xFFFF'FF80 <= {argName}" :
-					$"{argName} >= std::numeric_limits<std::uint8_t>::min() && {argName} <= std::numeric_limits<std::uint8_t>::max()",
+					$"{argName} >= std::numeric_limits<std::int8_t>::min() && {argName} <= std::numeric_limits<std::int8_t>::max()",
 				OpCodeSelectorKind.ImmediateByteSigned8To16 => arg.Kind == ArgKind.ImmediateUnsigned ?
-					$"{argName} <= ({arg.Type})std::numeric_limits<std::uint8_t>::max() || (0xFF80 <= {argName} && {argName} <= 0xFFFF)" :
-					$"{argName} >= std::numeric_limits<std::uint8_t>::min() && {argName} <= std::numeric_limits<std::uint8_t>::max()",
+					$"{argName} <= ({arg.Type})std::numeric_limits<std::int8_t>::max() || (0xFF80 <= {argName} && {argName} <= 0xFFFF)" :
+					$"{argName} >= std::numeric_limits<std::int8_t>::min() && {argName} <= std::numeric_limits<std::int8_t>::max()",
 				OpCodeSelectorKind.Vex => "GetInstructionPreferVex()",
 				OpCodeSelectorKind.EvexBroadcastX or OpCodeSelectorKind.EvexBroadcastY or OpCodeSelectorKind.EvexBroadcastZ =>
 					$"{argName}.IsBroadcast()",
